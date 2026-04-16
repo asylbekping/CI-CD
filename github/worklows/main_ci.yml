@@ -1,0 +1,35 @@
+name: Python
+
+on:
+  push:
+    branches: [ main ]  # main бутагына код келгенде иштейт
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-and-log-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Кодду көчүрүү
+      uses: actions/checkout@v3
+
+    - name: Python орнотуу
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Керектүү китепканаларды орнотуу
+      run: |
+        python -m pip install --upgrade pip
+        # Бизге unittest жана logging керек, алар стандарттуу китепканалар
+
+    - name: Тесттерди иштетүү
+      run: python test_logic.py
+
+    - name: Программанын иштешин текшерүү (Dry run)
+      run: |
+        # Программаны автоматтык түрдө иштетип көрүү (лог түзүлөбү?)
+        echo "25" | python main.py 
+        if [ -f app.log ]; then echo "Лог файлы түзүлдү!"; else exit 1; fi
+
